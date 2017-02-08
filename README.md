@@ -2,6 +2,8 @@
 
 Stupid simple language tool plugin for nvim.
 
+<img src="http://i.imgur.com/Bp0J7cK.gif">
+
 ## Usage
 
 ``` vim
