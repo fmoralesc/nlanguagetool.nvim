@@ -10,14 +10,13 @@ function! nlanguagetool#handler(job_id, data, event) dict abort
     try
         let j = json_decode(readfile(self.tf))
     catch
-	echom "languagetool: couldn't decode data"
+	echom "languagetool: couldn't decode data (".v:exception.")"
 	return
     endtry
     call setqflist([])
     for i in j.matches
 	let lnum = byte2line(i.offset + 1)
 	let col = i.offset - line2byte(lnum) + 2
-	echom string([lnum, col, i.length])
 	let repl = i.replacements != [] ? '[' . i.replacements[0].value . ']' : ''
 	let text = i.message . ' '. repl .' (' . i.rule.description . ')'
 	call setqflist([{'bufnr': self.bufnr, 'lnum': lnum, 'col': col,
@@ -25,6 +24,18 @@ function! nlanguagetool#handler(job_id, data, event) dict abort
 	"call matchaddpos('Error', [[lnum, col]])
     endfor
     let nerrs = len(j.matches)
-    echom 'languagetool: found '.nerrs.' error'. (len(nerrs) > 1 ? 's' : '').', check :copen'
+    if nerrs == 0
+	echom 'languagetool: '.strftime('%T').' found no errors'
+    else
+	echom 'languagetool: '.strftime('%T').' found '.nerrs.' error'. (len(nerrs) > 1 ? 's' : '').', check :copen'
+	if exists('g:worldslice#sigils')
+	    let g:worldslice#sigils.languagetool = '%#SLError#'.
+			\ nerrs
+	    augroup nltool_sigils
+		au BufLeave * if &buftype == 'quickfix' && has_key(g:worldslice#sigils, 'languagetool')| 
+			    \ call remove(g:worldslice#sigils, 'languagetool') | endif
+	    augroup END
+	endif
+    endif
     call delete(self.tf)
 endfunction
