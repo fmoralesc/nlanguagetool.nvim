@@ -27,7 +27,7 @@ function! nlanguagetool#handler(job_id, data, event) dict abort
     if nerrs == 0
 	echom 'languagetool: '.strftime('%T').' found no errors'
     else
-	echom 'languagetool: '.strftime('%T').' found '.nerrs.' error'. (len(nerrs) > 1 ? 's' : '').', check :copen'
+	echom 'languagetool: '.strftime('%T').' found '.nerrs.' error'. (nerrs > 1 ? 's' : '').', check :copen'
 	if exists('g:worldslice#sigils')
 	    let g:worldslice#sigils.languagetool = '%#SLError#'.
 			\ nerrs
