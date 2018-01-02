@@ -1,5 +1,9 @@
 function! nlanguagetool#call(...)
     let fname = expand('%')
+    if !fname
+	let fname = tempname()
+	silent! execute '%!tee' fnameescape(fname)
+    endif
     let bufnr = bufnr('%')
     let tmpfile = tempname()
     let call_s = 'languagetool --disablecategories TYPOGRAPHY --json ' . fname . ' > ' . tmpfile
