@@ -1,6 +1,6 @@
 function! nlanguagetool#call(...)
     let fname = expand('%')
-    if !fname
+    if fname == ''
 	let fname = tempname()
 	silent! execute '%!tee' fnameescape(fname)
     endif
