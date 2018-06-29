@@ -6,7 +6,7 @@ function! nlanguagetool#call(...)
     endif
     let bufnr = bufnr('%')
     let tmpfile = tempname()
-    let call_s = 'languagetool --disablecategories TYPOGRAPHY --json ' . fname . ' > ' . tmpfile
+    let call_s = 'languagetool --disablecategories TYPOGRAPHY --json ' . fnameescape(fname) . ' > ' . tmpfile
     call jobstart(call_s,  extend({'bufnr' : bufnr, 'tf': tmpfile}, {'on_exit': 'nlanguagetool#handler'}))
 endfunction
 
